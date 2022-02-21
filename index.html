@@ -1097,30 +1097,74 @@
 
         </div>
 
-        <div class="form">
-          <form action="forms/contact.php" method="post" role="form" class="php-email-form">
-            <div class="row">
-              <div class="form-group col-md-6">
-                <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+        <div class="col-lg-12 app-form">
+          <div class="head">
+          <form
+           action="" role="form"
+            method="post"
+            class="php-email-form"
+            id="login-form"
+          >
+          <input type="hidden" name="contact_number">
+            <div class="row gy-4">
+              <div class="col-md-6">
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  class="form-control"
+                  placeholder="Your Name"
+                  required
+                />
               </div>
-              <div class="form-group col-md-6">
-                <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+
+              <div class="col-md-6">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  placeholder="Your Email"
+                  required
+                />
+              </div>
+
+              <div class="col-md-12">
+                <input
+                  type="text"
+                  id="subject"
+                  class="form-control"
+                  name="subject"
+                  placeholder="Subject"
+                  required
+                />
+              </div>
+
+              <div class="col-md-12">
+                <textarea
+                  class="form-control"
+                  name="message"
+                  rows="6"
+                  id="message"
+                  placeholder="Message"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="col-md-12 text-center">
+                <div class="loading">Loading</div>
+              
+                <div class="sent-message">
+                  Your message has been sent. Thank you!
+                </div>
+
+                <button type="submit">Send Message</button>
               </div>
             </div>
-            <div class="form-group">
-              <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
-            </div>
-            <div class="form-group">
-              <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
-            </div>
-            <div class="my-3">
-              <div class="loading">Loading</div>
-              <div class="error-message"></div>
-              <div class="sent-message">Your message has been sent. Thank you!</div>
-            </div>
-            <div class="text-center"><button type="submit">Send Message</button></div>
           </form>
-        </div>
+      
+      </div>
+      </div>
 
       </div>
     </section><!-- End Contact Section -->
@@ -1168,7 +1212,74 @@
   <!-- Uncomment below i you want to use a preloader -->
   <!-- <div id="preloader"></div> -->
 
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script type="text/javascript">
+  (function() {
+  emailjs.init("user_CXRfLLzvcp8E0Ktm97seJ");
+  })();
+  </script>
+
+<script>
+  function clearForm() {
+      const name = document.getElementById('name').value = "";
+      const email = document.getElementById('email').value = "";
+      const sub = document.getElementById('subject').value = "";
+      const msg = document.getElementById('message').value = "";
+  }
+
+  function showError(error, alrt) {
+
+      const card = document.querySelector('.app-form');
+      const head = document.querySelector('.head');
+
+
+      const errordiv = document.createElement('div');
+
+      errordiv.className = alrt;
+      errordiv.appendChild(document.createTextNode(error));
+      card.insertBefore(errordiv, head);
+
+      setTimeout(clearError, 3000);
+
+  }
+
+  function clearError() {
+      document.querySelector('.alert').remove();
+  }
+</script>
+<script type='text/javascript'>
+  document.getElementById('login-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const sub = document.getElementById('subject').value;
+      const msg = document.getElementById('message').value;
+
+
+      // generate a five digit number for the contact_number variable
+      if (name != "" && email != "" && sub != "" && msg != "") {
+          this.contact_number.value = Math.random() * 100000 | 0;
+          // these IDs from the previous steps
+          emailjs.sendForm('service_m3802d4', 'template_470vh6d', this)
+              .then(function() {
+                  console.log('SUCCESS!');
+              }, function(error) {
+                  console.log('FAILED...', error);
+              });
+          showError('Received! Thanks for your message', 'alert alert-success');
+          clearForm();
+
+      } else {
+          showError('Fields Cannot be Empty!', 'alert alert-danger');
+
+      }
+
+  });
+</script>
+
   <!-- Vendor JS Files -->
+
+
   <script src="assets/vendor/purecounter/purecounter.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
